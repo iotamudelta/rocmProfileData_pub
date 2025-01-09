@@ -46,10 +46,11 @@ extern "C" {
 // libsqlite unloading before we are done using it
 // Current workaround: register an onexit function when first activity is delivered back
 //                     this let's us unload first, or close to.
-// New workaround: register 3 times, only finalize once.  see register_once
+// New workaround: register 4 times, only finalize once.  see register_once
 
 static std::once_flag register_once;
 static std::once_flag registerAgain_once;
+static std::once_flag registerDoubleAgain_once;
 
 //RoctracerDataSource::RoctracerDataSource()
 //{
@@ -161,6 +162,8 @@ int RoctracerDataSource::unwind(Logger &logger, const char *api, const sqlite_in
 
 	 n++;
      }
+
+     std::call_once(registerDoubleAgain_once, atexit, Logger::rpdFinalize);
 
      return 0;
 }
