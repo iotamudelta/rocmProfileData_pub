@@ -120,7 +120,7 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
         std::cout << "Chickensnake initialization complete" << std::endl;
     }
 
-    if (!state.initialized) {
+    if (!state->initialized) {
         std::cerr << "Chickensnake initialization failed" << std::endl;
     }
 

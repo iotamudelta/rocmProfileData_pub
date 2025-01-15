@@ -165,7 +165,7 @@ To update the submodule at any time and pull the latest changes, run:
 git submodule update --remote
 ```
 
-Additionally, a rust toolchain needs to be installed. We strongly recommend to use a recent one by
+Chickensnake requires `libunwind-dev` on Linux. Additionally, a rust toolchain needs to be installed. We strongly recommend to use a recent one by
 ```
 curl https://sh.rustup.rs -sSf | sh
 [enter] for normal install
