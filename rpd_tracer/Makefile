@@ -36,10 +36,12 @@ ifneq ($(CPPTRACE_INCLUDE_PATH),)
         RPD_INCLUDES += -I $(CPPTRACE_INCLUDE_PATH)
 endif
 
+CHICKENSNAKE_LIB =
 ifneq ($(CHICKENSNAKE_INCLUDE_PATH),)
         $(info Building with chickensnake)
         RPD_INCLUDES += -DRPD_STACKFRAME_SUPPORT -DRPD_CHICKENSNAKE_SUPPORT
         RPD_LIBS += -L. -lchickensnake
+        CHICKENSNAKE_LIB = libchickensnake.so
 endif
 
 RPD_OBJS = $(RPD_SRCS:.cpp=.o)
@@ -71,6 +73,10 @@ $(RPD_MAIN): $(RPD_OBJS)
 install: all
 	cp $(RPD_MAIN)  $(PREFIX)/lib/
 	cp $(RPD_SCRIPT) $(PREFIX)/bin/
+ifneq ($(CHICKENSNAKE_LIB),)
+	$(info Installing chickensnake)
+	cp $(CHICKENSNAKE_LIB) $(PREFIX)/lib/
+endif
 	ldconfig
 	$(PYTHON) setup.py install
 
