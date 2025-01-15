@@ -88,8 +88,8 @@ private:
     void finalize();
 
     std::string m_filename;
-    int m_writeOverheadRecords {0};
-    bool m_writeStackFrames {false};
+    bool m_writeOverheadRecords {false};
+    int m_writeStackFrames {0};
 
     bool m_done {false};
     int m_period{1};
