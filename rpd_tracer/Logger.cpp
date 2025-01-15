@@ -27,7 +27,7 @@
 #include <dlfcn.h>
 
 #include "Utility.h"
-
+#include <iostream>
 
 #if 0
 static void rpdInit() __attribute__((constructor));
@@ -266,6 +266,7 @@ void Logger::init()
     // Enable stack frame recording
     const char *stackframe = getenv("RPDT_STACKFRAMES");
     if (stackframe != nullptr) {
+        std::cout << "Stackframe choice " << stackframe << std::endl;
         int val = atoi(stackframe);
         m_writeStackFrames = val;
     }
