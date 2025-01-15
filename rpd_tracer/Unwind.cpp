@@ -109,7 +109,7 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
 
     return 0;
     }
-    else if (logger.writeStackFrames() == 1) {
+    else if (logger.writeStackFrames() == 2) {
 #ifdef RPD_CHICKENSNAKE_SUPPORT
 
     if (state == nullptr) {
