@@ -48,9 +48,11 @@ static std::once_flag registerDoubleAgain_once;
 
 int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
 
-    if (logger.writeStackFrames() == 0) return 0;
+    const int stack_choice = logger.writeStackFrames();
+    std::cout << "Stack frame choice " << stack_choice << std::endl;
+    if (stack_choice == 0) return 0;
 
-    else if (logger.writeStackFrames() == 1) {
+    else if (stack_choice == 1) {
 #ifdef RPD_CPPTRACE_SUPPORT
 #if 0
     // for reference: full stack w/o manipulations
@@ -109,7 +111,7 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
 
     return 0;
     }
-    else if (logger.writeStackFrames() == 2) {
+    else if (stack_choice == 2) {
 #ifdef RPD_CHICKENSNAKE_SUPPORT
 
     if (state == nullptr) {
