@@ -267,7 +267,7 @@ void Logger::init()
     const char *stackframe = getenv("RPDT_STACKFRAMES");
     if (stackframe != nullptr) {
         int val = atoi(stackframe);
-        m_writeStackFrames = (val != 0);
+        m_writeStackFrames = val;
     }
 }
 

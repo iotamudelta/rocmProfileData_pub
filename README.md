@@ -149,3 +149,27 @@ git submodule update --remote
 ```
 
 `make` will subsequently build `cpptrace` and link `rpd_tracer` against it. Enabling stacktrace capture requires setting `RPDT_STACKFRAMES=1`.
+
+### chickensnake submodule setup
+
+The chickensnake submodule adds the ability to capture stacktraces for every HIP API invocation for Python codes calling native backends. The module needs to be initialized and updated for this:
+```sh
+git submodule update --init --recursive
+```
+
+This command will initialize, fetch and checkout the submodule to the commit specified in the main repository.
+
+To update the submodule at any time and pull the latest changes, run:
+
+```sh
+git submodule update --remote
+```
+
+Additionally, a rust toolchain needs to be installed. We strongly recommend to use a recent one by
+```
+curl https://sh.rustup.rs -sSf | sh
+[enter] for normal install
+. "$HOME/.cargo/env"
+```
+
+`make` will subsequently build `chickensnake` and link `rpd_tracer` against it. Enabling stacktrace capture with chickensnake requires setting `RPDT_STACKFRAMES=2`.

@@ -22,10 +22,20 @@
 
 #include <sqlite3.h>
 #include "Logger.h"
+#include <iostream>
 
 #ifdef RPD_STACKFRAME_SUPPORT
+#ifdef RPD_CPPTRACE_SUPPORT
 #include <cpptrace/cpptrace.hpp>
 #include <sstream>
+#endif
+
+#ifdef RPD_CPPTRACE_SUPPORT
+#include "chickensnake.h"
+#include <unistd.h>
+
+static State* state = nullptr;
+#endif
 
 // FIXME: can we avoid shutdown corruption?
 // Other rocm libraries crashing on unload
@@ -38,8 +48,10 @@ static std::once_flag registerDoubleAgain_once;
 
 int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
 
-    if (!logger.writeStackFrames()) return 0;
+    if (logger.writeStackFrames() == 0) return 0;
 
+    else if (logger.writeStackFrames() == 1) {
+#ifdef RPD_CPPTRACE_SUPPORT
 #if 0
     // for reference: full stack w/o manipulations
     const std::string stack1 = cpptrace::generate_trace(0).to_string(false);
@@ -91,8 +103,43 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
     }
 
     std::call_once(registerDoubleAgain_once, atexit, Logger::rpdFinalize);
+#else
+    std::cerr << "Stackframes through cpptrace requested but feature not compiled in." << std::endl;
+#endif
 
     return 0;
+    }
+    else if (logger.writeStackFrames() == 1) {
+#ifdef RPD_CHICKENSNAKE_SUPPORT
+
+    if (state == nullptr) {
+        pid_t pid = getpid();
+        state = chickensnake_init(pid);
+    }
+
+    int len;
+    char** s = chickensnake_traces(state, &len);
+    for (int i = 0; i < len; i++) {
+        StackFrameTable::row frame;
+        frame.api_id = api_id;
+        frame.depth = i;
+        frame.name_id = logger.stringTable().getOrCreate(s[i]);
+        logger.stackFrameTable().insert(frame);
+        printf("String %d: %s\n", i, s[i]);
+    }
+    chickensnake_free_traces(s, len);
+
+    std::call_once(registerDoubleAgain_once, atexit, Logger::rpdFinalize);
+#else
+    std::cerr << "Stackframes through chickensnake requested but feature not compiled in." << std::endl;
+#endif
+    return 0;
+    }
+
+   else
+       std::cerr << "Stackframes requested through illegal choice. Only 1 (cpptrace) or 2 (chickensnake) supported." << std::endl;
+
+   return 0;
 }
 
 #else

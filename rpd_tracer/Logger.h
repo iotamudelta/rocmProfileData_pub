@@ -66,7 +66,7 @@ public:
     static void rpdFinalize() __attribute__((destructor));
 
     const std::string filename() { return m_filename; };
-    bool writeStackFrames() { return m_writeStackFrames; };
+    int writeStackFrames() { return m_writeStackFrames; };
 
 private:
     int m_activeCount {0};
@@ -87,7 +87,7 @@ private:
     void finalize();
 
     std::string m_filename;
-    bool m_writeOverheadRecords {true};
+    int m_writeOverheadRecords {0};
     bool m_writeStackFrames {false};
 
     bool m_done {false};

@@ -4,6 +4,7 @@ PREFIX = /usr/local
 HIP_PATH?= $(wildcard /opt/rocm/)
 CUDA_PATH?= $(wildcard /usr/local/cuda/)
 CPPTRACE_INCLUDE_PATH?= $(wildcard ../cpptrace_install/include)
+CHICKENSNAKE_INCLUDE_PATH?= $(wildcard chickensnake.h)
 
 HIPCC=$(HIP_PATH)/bin/hipcc
 
@@ -30,9 +31,15 @@ endif
 
 ifneq ($(CPPTRACE_INCLUDE_PATH),)
         $(info Building with cpptrace)
-        RPD_INCLUDES += -DRPD_STACKFRAME_SUPPORT
+        RPD_INCLUDES += -DRPD_STACKFRAME_SUPPORT -DRPD_CPPTRACE_SUPPORT
         RPD_LIBS += -L$(CPPTRACE_INCLUDE_PATH)/../lib -lcpptrace -ldwarf -lz -lzstd -ldl
         RPD_INCLUDES += -I $(CPPTRACE_INCLUDE_PATH)
+endif
+
+ifneq ($(CHICKENSNAKE_INCLUDE_PATH),)
+        $(info Building with chickensnake)
+        RPD_INCLUDES += -DRPD_STACKFRAME_SUPPORT -DRPD_CHICKENSNAKE_SUPPORT
+        RPD_LIBS += -L. -lchickensnake
 endif
 
 RPD_OBJS = $(RPD_SRCS:.cpp=.o)
