@@ -268,6 +268,7 @@ void Logger::init()
     if (stackframe != nullptr) {
         std::cout << "Stackframe choice " << stackframe << std::endl;
         int val = atoi(stackframe);
+	std::cout << "after atoi() " << val << std::endl;
         m_writeStackFrames = val;
     }
 }
