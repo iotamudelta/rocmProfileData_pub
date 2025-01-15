@@ -156,6 +156,10 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
 #else
 
 int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
+    const int stack_choice = logger.writeStackFrames();
+    if (stack_choice != 0) {
+        std::cerr << "Stackframes chosen but nothing compiled in." << std::endl;
+    }
     return 0;
 }
 
