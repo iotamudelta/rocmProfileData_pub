@@ -173,3 +173,5 @@ curl https://sh.rustup.rs -sSf | sh
 ```
 
 `make` will subsequently build `chickensnake` and link `rpd_tracer` against it. Enabling stacktrace capture with chickensnake requires setting `RPDT_STACKFRAMES=2`.
+
+`chickensnake` needs `--cap-add=SYS_PTRACE --cap-add=SYS_ADMIN --security-opt seccomp=unconfined` for docker runs.

@@ -350,6 +350,7 @@ For a PyTorch example with debug symbols tracing on a specific `hipMalloc`:
 ```
 showing a `hipMalloc` invocation from MIOpen setup during initialization tracking through PyTorch's native `aten` layer and generated code into the Python interpreter.
 
+For such hybrid workloads, a better stackframe analysis using `chickensnake` is discussed in [hybrid-stack-analysis](hybrid-stack-analysis.md).
 
 ### Summary
 Stackframe analysis helps to identify call chains in native code to the HIP API. With debug symbols present, full resolution through the native laye is possible.

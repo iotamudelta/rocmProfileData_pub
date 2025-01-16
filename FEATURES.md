@@ -182,7 +182,7 @@ for row in connection.execute("select args, avg(cpu_time), avg(gpu_time) from ca
 
 --------------------------------------------------------------------------------
 ## Stackframe recording
-Setting `RPDT_STACKFRAMES=1` as an environment variable enables recording stack traces for every HIP API call. The data is recorded in the `rocpd_stackframe` table:
+Setting `RPDT_STACKFRAMES=1` as an environment variable enables recording stack traces for every HIP API call using `cpptrace`. Setting `RPDT_STACKFRAMES=2` as an environment variable enables recording stack traces for every HIP API call using `chickentrace` and `py-spy`. The data is recorded in the `rocpd_stackframe` table in the same format for both:
 ```
 > select * from rocpd_stackframe limit 20;
 id|api_ptr_id|depth|name_id
