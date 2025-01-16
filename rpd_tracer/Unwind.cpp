@@ -131,7 +131,7 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
     for (int i = 8; i < len; i++) {
         StackFrameTable::row frame;
         frame.api_id = api_id;
-        frame.depth = i;
+        frame.depth = i-8;
         frame.name_id = logger.stringTable().getOrCreate(s[i]);
         logger.stackFrameTable().insert(frame);
         printf("String %d: %s\n", i, s[i]);
