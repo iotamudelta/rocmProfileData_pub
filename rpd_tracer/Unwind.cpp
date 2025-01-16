@@ -55,7 +55,7 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
 
     else if (stack_choice == 1) {
 #ifdef RPD_CPPTRACE_SUPPORT
-#warn "Compiling in RPD_CPPTRACE_SUPPORT"
+#warning "Compiling in RPD_CPPTRACE_SUPPORT"
 #if 0
     // for reference: full stack w/o manipulations
     const std::string stack1 = cpptrace::generate_trace(0).to_string(false);
@@ -115,7 +115,7 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
     }
     else if (stack_choice == 2) {
 #ifdef RPD_CHICKENSNAKE_SUPPORT
-#warn "Compiling in RPD_CHICKENSNAKE_SUPPORT"
+#warning "Compiling in RPD_CHICKENSNAKE_SUPPORT"
 
     if (state == nullptr) {
         std::cout << "Initializing chickensnake..." << std::endl;
@@ -157,7 +157,7 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
 }
 
 #else // RPD_STACKFRAME_SUPPORT
-#warn "Not compiling RPD_STACKFRAME_SUPPORT"
+#warning "Not compiling RPD_STACKFRAME_SUPPORT"
 
 int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
     const int stack_choice = logger.writeStackFrames();
