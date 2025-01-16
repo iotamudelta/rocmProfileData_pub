@@ -25,17 +25,18 @@
 #include <iostream>
 
 #ifdef RPD_STACKFRAME_SUPPORT
+
 #ifdef RPD_CPPTRACE_SUPPORT
 #include <cpptrace/cpptrace.hpp>
 #include <sstream>
-#endif
+#endif // RPD_CPPTRACE_SUPPORT
 
-#ifdef RPD_CPPTRACE_SUPPORT
+#ifdef RPD_CHICKENSNAKE_SUPPORT
 #include "chickensnake.h"
 #include <unistd.h>
 
 static State* state = nullptr;
-#endif
+#endif // RPD_CHICKENSNAKE_SUPPORT
 
 // FIXME: can we avoid shutdown corruption?
 // Other rocm libraries crashing on unload
@@ -54,12 +55,13 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
 
     else if (stack_choice == 1) {
 #ifdef RPD_CPPTRACE_SUPPORT
+#warn "Compiling in RPD_CPPTRACE_SUPPORT"
 #if 0
     // for reference: full stack w/o manipulations
     const std::string stack1 = cpptrace::generate_trace(0).to_string(false);
     std::cout << stack1 << std::endl;
     if (true) return 0;
-#endif
+#endif // 0
 
     // strip out the top frames that only point into roctracer/rpd, do not add color
     const std::string stack = cpptrace::generate_trace(3).to_string(false);
@@ -105,14 +107,15 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
     }
 
     std::call_once(registerDoubleAgain_once, atexit, Logger::rpdFinalize);
-#else
+#else // RPD_CPPTRACE_SUPPORT
     std::cerr << "Stackframes through cpptrace requested but feature not compiled in." << std::endl;
-#endif
+#endif // RPD_CPPTRACE_SUPPORT
 
     return 0;
     }
     else if (stack_choice == 2) {
 #ifdef RPD_CHICKENSNAKE_SUPPORT
+#warn "Compiling in RPD_CHICKENSNAKE_SUPPORT"
 
     if (state == nullptr) {
         std::cout << "Initializing chickensnake..." << std::endl;
@@ -141,9 +144,9 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
     chickensnake_free_traces(s, len);
 
     std::call_once(registerDoubleAgain_once, atexit, Logger::rpdFinalize);
-#else
+#else // RPD_CHICKENSNAKE_SUPPORT
     std::cerr << "Stackframes through chickensnake requested but feature not compiled in." << std::endl;
-#endif
+#endif // RPD_CHICKENSNAKE_SUPPORT
     return 0;
     }
 
@@ -153,7 +156,8 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
    return 0;
 }
 
-#else
+#else // RPD_STACKFRAME_SUPPORT
+#warn "Not compiling RPD_STACKFRAME_SUPPORT"
 
 int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
     const int stack_choice = logger.writeStackFrames();
@@ -163,5 +167,5 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
     return 0;
 }
 
-#endif
+#endif // RPD_STACKFRAME_SUPPORT
 
