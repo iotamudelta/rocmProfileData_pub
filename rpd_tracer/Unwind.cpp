@@ -50,7 +50,6 @@ static std::once_flag registerDoubleAgain_once;
 int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
 
     const int stack_choice = logger.writeStackFrames();
-    std::cout << "Stack frame choice " << stack_choice << std::endl;
     if (stack_choice == 0) return 0;
 
     else if (stack_choice == 1) {
@@ -118,22 +117,18 @@ int unwind(Logger &logger, const char *api, const sqlite_int64 api_id) {
 #warning "Compiling in RPD_CHICKENSNAKE_SUPPORT"
 
     if (state == nullptr) {
-        std::cout << "Initializing chickensnake..." << std::endl;
         pid_t pid = getpid();
-        std::cout << "Got PID " << pid << std::endl;
         state = chickensnake_init(pid);
-        std::cout << "Chickensnake initialization complete" << std::endl;
     }
 
     if (!state->initialized) {
         std::cerr << "Chickensnake initialization failed" << std::endl;
     }
 
-    std::cout << "Getting a chickensnake trace" << std::endl;
     int len;
     char** s = chickensnake_traces(state, &len);
-    std::cout << "Got a chickensnake trace of length " << len << std::endl;
-    for (int i = 0; i < len; i++) {
+    // discard internal frames
+    for (int i = 8; i < len; i++) {
         StackFrameTable::row frame;
         frame.api_id = api_id;
         frame.depth = i;

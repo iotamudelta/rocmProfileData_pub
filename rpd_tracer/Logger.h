@@ -67,7 +67,7 @@ public:
     static void rpdFinalize() __attribute__((destructor));
 
     const std::string filename() { return m_filename; };
-    int writeStackFrames() { std::cout << "Returning " << m_writeStackFrames << std::endl; return m_writeStackFrames; };
+    int writeStackFrames() { return m_writeStackFrames; };
 
 private:
     int m_activeCount {0};
